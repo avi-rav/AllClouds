@@ -1,0 +1,55 @@
+<div class="contact-card">
+    <div class="banner">
+        <img src="assets/images/all-clouds.jpg" alt="Banner" />
+        <div class="title">
+            <h2 *ngIf="mode === 'create'">Create Contact</h2>
+            <h2 *ngIf="mode === 'edit'">Edit Contact</h2>
+            <h2 *ngIf="mode === 'view'">Contact Details</h2>
+        </div>
+    </div>
+    <div class="profile">
+      <img class="avatar" *ngIf="contact.image" [src]="contact.image" [alt]="contact.name + ' Photo'">
+      <img class="avatar" *ngIf="!contact.image" src="assets/images/avatar.png" alt="Profile Photo">
+    </div>
+
+    <div class="info" *ngIf="mode !== 'view'">
+        <form >
+            <h2><input type="text" [(ngModel)]="contact.name" name="name" placeholder="Name" /></h2>
+            <input type="text" [(ngModel)]="contact.cell" name="cell" placeholder="cell" />
+            <input type="text" [(ngModel)]="contact.phone" name="phone" placeholder="phone" />
+            <input type="email" [(ngModel)]="contact.email" name="email" placeholder="Email" />
+            <input type="email" [(ngModel)]="contact.registrationDate" name="registrationDate" placeholder="Registration Date" />
+            <input type="email" [(ngModel)]="contact.age" name="age" placeholder="age" />
+            <button type="submit">{{ mode === 'create' ? 'Create' : 'Update' }}</button>
+        </form>
+    </div>
+    <div class="info" *ngIf="mode === 'view'">
+      <h2>{{ contact.name }}</h2>
+      <div class="contact-details">
+        <div>
+            <span class="label">full address</span>
+            <div class="detail-text">{{ contact.fullAddress }}</div>
+        </div>
+        <div>
+            <span class="label">MOBILE</span>
+            <div class="detail-text">{{ contact.cell }}</div>
+        </div>
+        <div>
+            <span class="label">Phone</span>
+            <div class="detail-text">{{ contact.phone }}</div>
+        </div>
+        <div>
+            <span class="label">EMAIL</span>
+            <div class="detail-text">{{ contact.email }}</div>
+        </div>
+        <div>
+            <span class="label">registration Date</span>
+            <div class="detail-text">{{ contact.registrationDate | date}}</div>
+        </div>
+        <div>
+            <span class="label">age</span>
+            <div class="detail-text">{{ contact.age }}</div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,21 @@
+<div class="contact-card">
+    <div class="banner">
+        <img src="assets/images/all-clouds.jpg" alt="Banner" />
+    </div>
+    <div class="profile">
+      <img class="avatar" *ngIf="contact.image" [src]="contact.image" [alt]="contact.name + ' Photo'">
+      <img class="avatar" *ngIf="!contact.image" src="assets/images/avatar.png" alt="Profile Photo">
+    </div>
+    <div class="info">
+      <h2>{{ contact.name }}</h2>
+      <div class="contact-details">
+        <p><span class="label">MOBILE</span> {{ contact.cell }}</p>
+        <p><span class="label">Phone</span> {{ contact.phone }}</p>
+        <p><span class="label">EMAIL</span> {{ contact.email }}</p>
+        <p><span class="label">registration Date</span> {{ contact.registrationDate | date}}</p>
+        <p><span class="label">age</span> {{ contact.age }}</p>
+        <p><span class="label">EMAIL</span> {{ contact.email }}</p>
+        <p><span class="label">EMAIL</span> {{ contact.email }}</p>
+      </div>
+    </div>
+  </div>

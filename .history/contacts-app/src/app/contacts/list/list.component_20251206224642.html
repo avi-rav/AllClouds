@@ -1,0 +1,21 @@
+<header class="header">
+    <h2>Contacts List</h2>
+    <div class="actions">
+      <button (click)="addRandom()">Add random contacts</button>
+      <button routerLink="/contacts/new">+</button>
+    </div>
+  </header>
+  
+  <div *ngFor="let group of groupedContacts | keyvalue">
+    <h4 class="group-letter">{{ group.key }}</h4>
+    <app-contact-card *ngFor="let contact of group.value" [contact]="contact"></app-contact-card>
+  </div>
+  
+  <footer>
+      <nav class="bottom-nav">
+        <button>Recent</button>
+        <button class="active">Contacts</button>
+        <button>Favorites</button>
+      </nav>
+  </footer>
+  

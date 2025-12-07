@@ -1,0 +1,39 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .actions button {
+    margin-left: 8px;
+    font-size: 18px;
+    background: none;
+    border: none;
+  }
+  
+  .group-letter {
+    padding: 4px 10px;
+    font-weight: bold;
+    color: #888;
+    background: #f7f7f7;
+  }
+  
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 6px 0;
+  }
+  
+  .bottom-nav button.active {
+    color: blue;
+    font-weight: bold;
+  }
+  

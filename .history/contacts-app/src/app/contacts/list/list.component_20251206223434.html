@@ -1,0 +1,20 @@
+<h1>Contact List works!</h1>
+<header class="header">
+    <h2>All</h2>
+    <div class="actions">
+      <button>🔍</button>
+      <button routerLink="/contacts/new">+</button>
+    </div>
+  </header>
+  
+  <div *ngFor="let group of groupedContacts | keyvalue">
+    <h4 class="group-letter">{{ group.key }}</h4>
+    <app-contact-card *ngFor="let contact of group.value" [contact]="contact"></app-contact-card>
+  </div>
+  
+  <nav class="bottom-nav">
+    <button>Recent</button>
+    <button class="active">Contacts</button>
+    <button>Favorites</button>
+  </nav>
+  
