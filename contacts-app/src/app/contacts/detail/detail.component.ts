@@ -68,11 +68,9 @@ export class DetailComponent {
   editContact(mode:string) {
     if(mode === 'View'){
       this.mode = 'view';
-      this.router.navigate(['/contacts', this.contact.id]);
     }
     else{
       this.mode = 'edit';
-      this.router.navigate(['/contacts', this.contact.id, 'edit']);
     }
   }
   
