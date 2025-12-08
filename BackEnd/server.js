@@ -16,12 +16,16 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
-const upload = multer({ storage });
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit
+});
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/uploads', express.static(uploadDir)); // serve uploaded images
+app.use('/uploads', express.static(uploadDir));
 
 // Initialize SQLite database
 const db = new Database('contacts.db');
@@ -47,6 +51,21 @@ db.prepare(`
 app.get('/contacts', (req, res) => {
   const contacts = db.prepare('SELECT * FROM contacts').all();
   res.json(contacts);
+});
+
+app.post('/contacts/:id/upload-image', upload.single('image'), (req, res) => {
+    const contactId = req.params.id;
+  
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+  
+    const imagePath = `/uploads/${req.file.filename}`;
+  
+    db.prepare("UPDATE contacts SET image = ? WHERE id = ?")
+      .run(imagePath, contactId);
+  
+    res.json({ path: imagePath });
 });
 
 // Get contact by ID
