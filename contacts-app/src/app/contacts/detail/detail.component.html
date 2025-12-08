@@ -36,17 +36,30 @@
         <div class="detail-item">
             <span class="material-icons">smartphone</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.cell }}</div>
-            <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.cell" name="cell" placeholder="cell" />
+            <input type="text" [(ngModel)]="contact.cell" name="cell" placeholder="cell"
+              (blur)="touched.cell = true; validateFields()"
+              (keyup.enter)="touched.cell = true; validateFields()"
+              [class.invalid]="touched.cell && !valid.cell"/>
+            <div class="error" *ngIf="touched.cell && !valid.cell">Invalid cell format</div>        
         </div>
         <div class="detail-item">
             <span class="material-icons">call</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.phone }}</div>
-            <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.phone" name="phone" placeholder="phone" />
+            <input type="text" [(ngModel)]="contact.phone" name="phone" placeholder="phone"
+              (blur)="touched.phone = true; validateFields()"
+              (keyup.enter)="touched.phone = true; validateFields()"
+              [class.invalid]="touched.phone && !valid.phone"/>
+            <div class="error" *ngIf="touched.phone && !valid.phone">Invalid phone format</div>        
         </div>
         <div class="detail-item">
             <span class="material-icons">mail</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.email }}</div>
-            <input type="email" *ngIf="mode !== 'view'" [(ngModel)]="contact.email" name="email" placeholder="Email" />
+            <input type="email" *ngIf="mode !== 'view'" [(ngModel)]="contact.email" name="email" 
+              placeholder="Email" 
+              (blur)="touched.email = true; validateFields()"
+              (keyup.enter)="touched.email = true; validateFields()"
+              [class.invalid]="touched.email && !valid.email"/>
+            <div class="error" *ngIf="touched.email && !valid.email">Invalid email format</div>
         </div>
         <div class="detail-item">
             <span class="material-icons">event</span>

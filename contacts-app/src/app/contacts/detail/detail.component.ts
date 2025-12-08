@@ -15,6 +15,18 @@ export class DetailComponent {
   formData: FormData = new FormData();
   previewImage: string | ArrayBuffer | null = null;
 
+  touched = {
+    email: false,
+    phone: false,
+    cell: false
+  };
+  
+  valid = {
+    email: true,
+    phone: true,
+    cell: true
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -50,6 +62,14 @@ export class DetailComponent {
   }
 
   save(mode:string){
+    this.touched.email = this.touched.phone = this.touched.cell = true;
+    this.validateFields();
+
+    if (!this.valid.email || !this.valid.phone || !this.valid.cell) {
+      this.notification.show("Please enter a valid values", "error", 2500);
+      return; 
+    }
+
     this.uploadImg()
     if(mode === 'create'){
       this.contactService.createContact(this.contact).subscribe({
@@ -156,4 +176,15 @@ export class DetailComponent {
         return 'assets/images/avatar.png';
     }
   }
+
+
+  
+  validateFields() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    this.valid.email = !this.contact.email || emailRegex.test(this.contact.email);
+    const phoneRegex = /^[0-9]{7,15}$/;
+    this.valid.phone = !this.contact.phone || phoneRegex.test(this.contact.phone);
+    this.valid.cell = !this.contact.cell || phoneRegex.test(this.contact.cell);
+  }
+
 }

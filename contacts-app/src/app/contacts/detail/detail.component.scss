@@ -103,6 +103,13 @@
         font-size: 0.9em;
         margin-bottom: 15px;
       }
+
+      input {
+        flex: 1; 
+        padding: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
     }
   
     .contact-details {
@@ -115,7 +122,8 @@
         align-items: center;
         margin: 15px 0;
         font-size: 1em;
-        
+        position: relative;
+
         .material-icons {
           margin-right: 20px;
           color: #2196f3;
@@ -128,6 +136,20 @@
           text-transform: uppercase;
         }
       }
+    }
+
+    .invalid {
+      border: 1px solid #e74c3c;
+      background-color: #fdecea;
+    }
+    
+    .error {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 4px;
+      position: absolute;
+      bottom: -15px;
+      left: 45px;
     }
 
     .save-btn{
