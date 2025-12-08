@@ -36,7 +36,7 @@
         <div class="detail-item">
             <span class="material-icons">smartphone</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.cell }}</div>
-            <input type="text" [(ngModel)]="contact.cell" name="cell" placeholder="cell"
+            <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.cell" name="cell" placeholder="cell"
               (blur)="touched.cell = true; validateFields()"
               (keyup.enter)="touched.cell = true; validateFields()"
               [class.invalid]="touched.cell && !valid.cell"/>
@@ -45,7 +45,7 @@
         <div class="detail-item">
             <span class="material-icons">call</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.phone }}</div>
-            <input type="text" [(ngModel)]="contact.phone" name="phone" placeholder="phone"
+            <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.phone" name="phone" placeholder="phone"
               (blur)="touched.phone = true; validateFields()"
               (keyup.enter)="touched.phone = true; validateFields()"
               [class.invalid]="touched.phone && !valid.phone"/>
@@ -75,3 +75,4 @@
       </div>
     </div>
   </div>
+  <app-sync-status></app-sync-status>

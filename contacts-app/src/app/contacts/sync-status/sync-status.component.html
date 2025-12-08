@@ -1,0 +1,17 @@
+<div class="sync-status" [class.offline]="!isOnline">
+    <div class="status-indicator">
+      <span class="status-dot" [class.online]="isOnline" [class.offline]="!isOnline"></span>
+      <span class="status-text">{{ isOnline ? 'Online' : 'Offline' }}</span>
+    </div>
+    
+    <div *ngIf="syncStatus.hasPending" class="pending-ops">
+      <span class="pending-count">{{ syncStatus.count }} pending</span>
+      <button *ngIf="isOnline" (click)="syncNow()" class="sync-btn">
+        Sync Now
+      </button>
+    </div>
+    
+    <div *ngIf="syncStatus.lastSync && !syncStatus.hasPending" class="last-sync">
+      Last synced: {{ formatLastSync(syncStatus.lastSync) }}
+    </div>
+</div>

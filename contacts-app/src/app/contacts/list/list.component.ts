@@ -84,7 +84,10 @@ export class ListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error Generate contacts', err)
-        this.notification.show('Error generating contacts', 'error',3000);
+        if(err == 'Cannot generate contacts in offline mode')
+          this.notification.show(err, 'error',3000);
+        else
+          this.notification.show('Error generating contacts', 'error',3000);
       }
     });
   }

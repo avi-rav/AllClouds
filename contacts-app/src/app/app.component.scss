@@ -1,0 +1,22 @@
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #ddd;
+    border-top: 1px solid #ddd;
+    padding: 6px 0;
+    height: 40px;
+
+    .material-icons {
+      font-size: 35px;
+      color: #2196f3;
+      cursor: pointer;
+    }
+
+    &.button.active {
+      color: blue;
+      font-weight: bold;
+    }
+  }

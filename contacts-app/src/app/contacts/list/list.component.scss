@@ -37,15 +37,15 @@
     padding: 6px 10px;
     border-radius: 10px;
     margin: 0 auto;
-  }
-  
-  .search-box input {
-    border: none;
-    outline: none;
-    background: transparent;
-    padding: 6px;
-    font-size: 16px;
-    width: 200px;
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 6px;
+      font-size: 16px;
+      width: 200px;
+      box-shadow: none;
+    }
   }
   
   .actions button {
@@ -66,31 +66,7 @@
     font-weight: bold;
     color: #888;
     background: #f7f7f7;
-  }
-  
-  .bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #ddd;
-    border-top: 1px solid #ddd;
-    padding: 6px 0;
-    height: 40px;
-
-    .material-icons {
-      font-size: 35px;
-      color: #2196f3;
-      cursor: pointer;
-    }
-
-    &.button.active {
-      color: blue;
-      font-weight: bold;
-    }
-  }
-  
+  } 
 
   .contacts-header {
     display: flex;

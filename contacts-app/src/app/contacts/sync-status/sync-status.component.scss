@@ -1,0 +1,89 @@
+.sync-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-size: 14px;
+    margin: 5px 20px;
+    position: fixed;
+    bottom: 55px;
+    width: 82vw;
+  }
+
+  .sync-status.offline {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    margin: 5px 20px;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .status-dot.online {
+    background: #28a745;
+  }
+
+  .status-dot.offline {
+    background: #ffc107;
+    animation: none;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .status-text {
+    font-weight: 500;
+  }
+
+  .pending-ops {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+  }
+
+  .pending-count {
+    color: #856404;
+    font-weight: 500;
+  }
+
+  .sync-btn {
+    padding: 4px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .sync-btn:hover {
+    background: #0056b3;
+  }
+
+  .last-sync {
+    color: #6c757d;
+    font-size: 12px;
+  }

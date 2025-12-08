@@ -11,6 +11,7 @@ import { ContactCardComponent } from './shared/contact-card/contact-card.compone
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NotificationsComponent } from './shared/notifications/notifications.component';
+import { SyncStatusComponent } from './contacts/sync-status/sync-status.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NotificationsComponent } from './shared/notifications/notifications.com
     ListComponent,
     DetailComponent,
     ContactCardComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    SyncStatusComponent
   ],
   imports: [
     BrowserModule,
