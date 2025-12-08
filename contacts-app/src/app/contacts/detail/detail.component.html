@@ -18,7 +18,8 @@
     <div class="profile">
       <img class="avatar" [src]="imgPath()" [alt]="contact.name + ' Photo'">
       <div *ngIf="mode !== 'view'">
-        <img src="assets/images/cam3.png" alt="Camera Icon" class="cam-icon">
+        <!-- <img src="assets/images/cam3.png" alt="Camera Icon" class="cam-icon"> -->
+        <span class="material-icons cam-icon" >add_a_photo</span>
         <input type="file" accept="image/*" class="upload-input" id="imageUpload" (change)="onFileSelected($event)">
       </div>
     </div>

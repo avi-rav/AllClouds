@@ -13,6 +13,11 @@ export class ListComponent implements OnInit {
   contacts: Contact[] = [];
   groupedContacts: { [key: string]: any[] } = {};
   isMenuOpen = false;
+  searchOpen = false;
+  searchTerm = '';
+  filteredContacts: Contact[] = [];
+  groupedList: { key: string, contacts: Contact[] }[] = [];
+  filteredGroupedList: { key: string, contacts: Contact[] }[] = [];
 
   constructor(private contactService: ContactService, private notification: NotificationService) {}
 
@@ -44,18 +49,30 @@ export class ListComponent implements OnInit {
     });
   }
 
+  private buildGroupedFromArray(source: Contact[]) {
+    const grouped: { [key: string]: Contact[] } = {};
+  
+    for (const contact of source) {
+      const firstLetter = (contact.name && contact.name.charAt(0) || '#').toUpperCase();
+      if (!grouped[firstLetter]) grouped[firstLetter] = [];
+      grouped[firstLetter].push(contact);
+    }
+  
+    // create sorted array of groups for deterministic UI order
+    const groupedArray = Object.keys(grouped)
+      .sort()
+      .map(key => ({ key, contacts: grouped[key] }));
+  
+    return { grouped, groupedArray };
+  }
+  
   groupContacts() {
-    this.groupedContacts = {};
+    const { grouped, groupedArray } = this.buildGroupedFromArray(this.contacts);
+    this.groupedContacts = grouped;
+    this.groupedList = groupedArray;
   
-    for (const contact of this.contacts) {
-      const firstLetter = contact.name.charAt(0).toUpperCase();
-  
-      if (!this.groupedContacts[firstLetter]) {
-        this.groupedContacts[firstLetter] = [];
-      }
-  
-      this.groupedContacts[firstLetter].push(contact);
-    }  
+    // initial filtered list = full list (new array instance -> triggers render)
+    this.filteredGroupedList = groupedArray.slice();
   }
 
   addRandom() {
@@ -71,4 +88,27 @@ export class ListComponent implements OnInit {
       }
     });
   }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.searchOpen = false;
+    this.filteredGroupedList = this.groupedList.slice();
+  }
+
+  filterContacts() {
+    const term = (this.searchTerm || '').trim().toLowerCase();
+  
+    if (!term) {
+      // restore full grouped list
+      this.filteredGroupedList = this.groupedList.slice();
+      return;
+    }
+  
+    // filter original contacts, then regroup
+    const filtered = this.contacts.filter(c => (c.name || '').toLowerCase().includes(term));
+    const { groupedArray } = this.buildGroupedFromArray(filtered);
+  
+    this.filteredGroupedList = groupedArray;
+  }
+  
 }
