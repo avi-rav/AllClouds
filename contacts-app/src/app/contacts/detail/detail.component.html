@@ -16,10 +16,7 @@
         </div>
     </div>
     <div class="profile">
-      <img class="avatar" *ngIf="contact.image" 
-        [src]="contact.image.startsWith('/uploads/') ? 'http://localhost:3000' + contact.image : contact.image" 
-        [alt]="contact.name + ' Photo'">
-      <img class="avatar" *ngIf="!contact.image" src="assets/images/avatar.png" alt="Profile Photo">
+      <img class="avatar" [src]="imgPath()" [alt]="contact.name + ' Photo'">
       <div *ngIf="mode !== 'view'">
         <img src="assets/images/cam3.png" alt="Camera Icon" class="cam-icon">
         <input type="file" accept="image/*" class="upload-input" id="imageUpload" (change)="onFileSelected($event)">

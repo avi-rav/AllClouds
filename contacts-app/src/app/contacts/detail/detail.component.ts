@@ -12,6 +12,9 @@ export class DetailComponent {
   contact:Contact = {} as Contact;
   mode: 'create' | 'edit' | 'view' = 'view';
   selectedImageUrl: string | null = null;
+  formData: FormData = new FormData();
+  previewImage: string | ArrayBuffer | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -47,6 +50,7 @@ export class DetailComponent {
   }
 
   save(mode:string){
+    this.uploadImg()
     if(mode === 'create'){
       this.contactService.createContact(this.contact).subscribe({
         next: (data) => {
@@ -96,10 +100,18 @@ export class DetailComponent {
     const file = event.target.files[0];
     if (!file) return;
   
-    const formData = new FormData();
-    formData.append('image', file);
-      
-    this.contactService.uploadImage(this.contact.id, formData).subscribe({
+    
+    this.formData.append('image', file);
+          
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result; // Base64 temporary preview
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadImg () {
+    this.contactService.uploadImage(this.contact.id, this.formData).subscribe({
       next: (response: any) => {
         console.log('Image uploaded successfully:', response);
         this.notification.show('Image uploaded successfully!', 'success',3000);
@@ -133,5 +145,16 @@ export class DetailComponent {
         this.notification.show('Error deleting contact', 'error',3000);
       }
     });
+  }
+
+  imgPath(){
+    if(this.previewImage) 
+      return this.previewImage;
+    else {
+      if(this.contact && this.contact.image) 
+        return (this.contact?.image.startsWith('/uploads/')) ? 'http://localhost:3000' + this.contact.image : this.contact.image;
+      else 
+        return 'assets/images/avatar.png';
+    }
   }
 }
