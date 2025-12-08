@@ -98,14 +98,13 @@ export class DetailComponent {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (!file) return;
-  
-    
+    if (!file) return;  
+    this.formData = new FormData();
     this.formData.append('image', file);
           
     const reader = new FileReader();
     reader.onload = () => {
-      this.previewImage = reader.result; // Base64 temporary preview
+      this.previewImage = reader.result;
     };
     reader.readAsDataURL(file);
   }

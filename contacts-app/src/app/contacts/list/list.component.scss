@@ -15,10 +15,23 @@
       font-size: 1.2rem;
     }
   }
+
+  .list-wrapper{
+    height: calc(100vh - 135px);
+    overflow: auto;
+  }
   
   .actions button {
     margin-left: 8px;
-    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    color: #aaa;
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s;
   }
   
   .group-letter {
@@ -37,12 +50,14 @@
     background: #fff;
     border-top: 1px solid #ddd;
     padding: 6px 0;
+    height: 40px;
+
+    &.button.active {
+      color: blue;
+      font-weight: bold;
+    }
   }
   
-  .bottom-nav button.active {
-    color: blue;
-    font-weight: bold;
-  }
 
   .contacts-header {
     display: flex;

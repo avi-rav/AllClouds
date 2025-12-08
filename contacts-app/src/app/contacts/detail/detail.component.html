@@ -8,7 +8,7 @@
             <div class="buttons">
                 <button (click)="toContact()"><span class="material-icons">arrow_back</span></button>
                 <div>
-                    <button (click)="deleteItem()"><span class="material-icons">delete</span></button>
+                    <button *ngIf="mode !== 'create'" (click)="deleteItem()"><span class="material-icons">delete</span></button>
                     <button *ngIf="mode === 'view'" (click)="editContact('Edit')"><span class="material-icons">edit</span></button>
                     <button *ngIf="mode === 'edit'" (click)="editContact('View')"><span class="material-icons">visibility</span></button>
                 </div>
