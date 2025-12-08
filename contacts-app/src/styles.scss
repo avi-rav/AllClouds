@@ -8,4 +8,85 @@ body {
     h2{
         font-size: 1.2rem;
     }
+
+    input {
+        padding: 6px 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        &:focus {
+            border-color: #2196f3;
+            box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+        }
+
+        &.error {
+            border-color: #f44336;
+          }
+    }
+
+    .btn {
+        padding: 6px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(1, 2, 4, 0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+            background-color: #2196f3;
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        &:disabled {
+            background-color: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        background-color: #1976d2;
+        color: #fff;
+        font-size: 20px;
+
+
+    }
+
+    // button {
+    //     background-color: #fbff00; /* Primary blue */
+    //     color: white;
+    //     padding: 5px 7px;
+    //     border: none;
+    //     border-radius: 5px;
+    //     font-family: sans-serif;
+    //     font-size: 12px;
+    //     cursor: pointer;
+    //     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    //     &:hover {
+    //       background-color: #0056b3; /* Darker blue on hover */
+    //       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    //     }
+    //     &:active {
+    //       background-color: #004085; /* Even darker blue when active */
+    //       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    //       transform: translateY(1px); /* Slight press effect */
+    //     }
+    //   }
+      
+      
 }

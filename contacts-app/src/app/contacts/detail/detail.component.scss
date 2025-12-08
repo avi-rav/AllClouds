@@ -1,5 +1,4 @@
 .contact-card {
-    max-width: 400px;
     margin: 20px auto;
     border-radius: 10px;
     overflow: hidden;
@@ -22,7 +21,9 @@
         .buttons {
           position: absolute;
           top: 0;
-          right: 10px;
+          width: 97%;
+          display: flex;
+          justify-content: space-between;
           
           button {
             background: rgba(255, 255, 255, 0.3);
@@ -48,18 +49,41 @@
         object-fit: cover;
       }
     }
+    
   
     .profile {
       display: flex;
       justify-content: center;
+      margin: 0 auto;
       margin-top: -50px;
       position: relative;
+      width: 108px;
+      height: 108px;
   
       .avatar {
-        width: 100px;
-        height: 100px;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         border: 4px solid #fff;
+        object-fit: cover;
+      }
+
+      .upload-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;   
+      }
+
+      .cam-icon{
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        left: 40px;
+        top: 40px;
       }
     }
   
@@ -82,20 +106,34 @@
     .contact-details {
       text-align: left;
       padding-left: 10px;
-      font-size: 0.9rem;
+      font-size: 1rem;
   
       .detail-item {
         display: flex;
         align-items: center;
-        margin: 5px 0;
+        margin: 15px 0;
         font-size: 0.9em;
-  
+        
+        .material-icons {
+          margin-right: 20px;
+          color: #2196f3;
+        }
+
         .label {
           width: 100px;
           font-weight: bold;
           color: #555;
           text-transform: uppercase;
         }
+      }
+    }
+
+    .save-btn{
+      width: 85vw;
+      margin: 5px auto;
+      background-color: #2196f3;
+      &:hover {
+        background-color: #1976d2; 
       }
     }
   }

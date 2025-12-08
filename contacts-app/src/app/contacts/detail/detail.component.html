@@ -6,15 +6,24 @@
             <h2 *ngIf="mode === 'edit'">Edit Contact</h2>
             <h2 *ngIf="mode === 'view'">Contact Details</h2>
             <div class="buttons">
-                <button (click)="toContact()">Contacts</button>
-                <button *ngIf="mode === 'view'" (click)="editContact('Edit')">Edit</button>
-                <button *ngIf="mode === 'edit'" (click)="editContact('View')">View</button>
+                <button (click)="toContact()"><span class="material-icons">arrow_back</span></button>
+                <div>
+                    <button (click)="deleteItem()"><span class="material-icons">delete</span></button>
+                    <button *ngIf="mode === 'view'" (click)="editContact('Edit')"><span class="material-icons">edit</span></button>
+                    <button *ngIf="mode === 'edit'" (click)="editContact('View')"><span class="material-icons">visibility</span></button>
+                </div>
             </div>
         </div>
     </div>
     <div class="profile">
-      <img class="avatar" *ngIf="contact.image" [src]="contact.image" [alt]="contact.name + ' Photo'">
+      <img class="avatar" *ngIf="contact.image" 
+        [src]="contact.image.startsWith('/uploads/') ? 'http://localhost:3000' + contact.image : contact.image" 
+        [alt]="contact.name + ' Photo'">
       <img class="avatar" *ngIf="!contact.image" src="assets/images/avatar.png" alt="Profile Photo">
+      <div *ngIf="mode !== 'view'">
+        <img src="assets/images/cam3.png" alt="Camera Icon" class="cam-icon">
+        <input type="file" accept="image/*" class="upload-input" id="imageUpload" (change)="onFileSelected($event)">
+      </div>
     </div>
 
     <div class="info">
@@ -22,36 +31,36 @@
       <h2><input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.name" name="name" placeholder="Name" /></h2>
       <div class="contact-details">
         <div class="detail-item">
-            <span class="label">full address</span>
+            <span class="material-icons">location_on</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.fullAddress }}</div>
             <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.fullAddress" name="fullAddress" placeholder="Full Address" />
         </div>
         <div class="detail-item">
-            <span class="label">MOBILE</span>
+            <span class="material-icons">smartphone</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.cell }}</div>
             <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.cell" name="cell" placeholder="cell" />
         </div>
         <div class="detail-item">
-            <span class="label">Phone</span>
+            <span class="material-icons">call</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.phone }}</div>
             <input type="text" *ngIf="mode !== 'view'" [(ngModel)]="contact.phone" name="phone" placeholder="phone" />
         </div>
         <div class="detail-item">
-            <span class="label">EMAIL</span>
+            <span class="material-icons">mail</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.email }}</div>
             <input type="email" *ngIf="mode !== 'view'" [(ngModel)]="contact.email" name="email" placeholder="Email" />
         </div>
         <div class="detail-item">
-            <span class="label">registration Date</span>
+            <span class="material-icons">event</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.registrationDate | date}}</div>
             <input type="date" *ngIf="mode !== 'view'" [(ngModel)]="contact.registrationDate" name="registrationDate" placeholder="Registration Date" />
         </div>
         <div class="detail-item">
-            <span class="label">age</span>
+            <span class="material-icons">person</span>
             <div *ngIf="mode === 'view'" class="detail-text">{{ contact.age }}</div>
-            <input type="number" *ngIf="mode !== 'view'" [(ngModel)]="contact.age" name="age" placeholder="age" />
+            <input type="number" *ngIf="mode !== 'view'" max="120" min="0" [(ngModel)]="contact.age" name="age" placeholder="age" />
         </div>
-        <button *ngIf="mode !== 'view'" (click)="save(mode)">{{ mode === 'create' ? 'Create' : 'Update' }}</button>
+        <button class="btn save-btn" *ngIf="mode !== 'view'" (click)="save(mode)">{{ mode === 'create' ? 'Create' : 'Update' }}</button>
       </div>
     </div>
   </div>

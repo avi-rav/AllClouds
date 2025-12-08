@@ -11,6 +11,8 @@ export class ContactCardComponent {
 
   constructor(private router: Router) {}
 
+  
+
   openDetail(id: number) {
     this.router.navigate(['/contacts', id]);
   }

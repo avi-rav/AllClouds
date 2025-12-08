@@ -54,4 +54,8 @@ export class ContactService {
     let countitems = count || 10;
     return this.http.post(`${this.apiUrl}/generate?count=${countitems}`, {});
   }
+
+  uploadImage(contactId: number, formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${contactId}/upload-image`, formData);
+  }
 }

@@ -10,13 +10,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContactCardComponent } from './shared/contact-card/contact-card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NotificationsComponent } from './shared/notifications/notifications.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListComponent,
     DetailComponent,
-    ContactCardComponent
+    ContactCardComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
