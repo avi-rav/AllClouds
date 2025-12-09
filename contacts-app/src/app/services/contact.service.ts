@@ -33,7 +33,7 @@ export class ContactService {
   private readonly PENDING_OPS_KEY = 'pending_operations';
   private readonly LAST_SYNC_KEY = 'last_sync_timestamp';
   private isOnline: boolean = navigator.onLine;
-
+  private isSyncing: boolean = false;
   constructor(private http: HttpClient) {
     // Monitor online/offline status
     window.addEventListener('online', () => {
@@ -218,8 +218,8 @@ export class ContactService {
         tap((response: any) => {
           // Update cache with new image path
           const cachedContacts = this.getFromCache();
-          const updatedCache = cachedContacts.map(c => 
-            c.id === contactId ? { ...c, image: response.path } : c
+          const updatedCache = cachedContacts.map(con => 
+            con.id === contactId ? { ...con, image: response.path } : con
           );
           this.saveToCache(updatedCache);
         }),
@@ -313,38 +313,48 @@ export class ContactService {
     console.log('Added pending operation:', operation.type);
   }
 
-  // Sync pending operations when back online
   syncPendingOperations(): void {
     if (!this.isOnline) {
       console.log('Cannot sync - offline');
       return;
     }
-
+  
+    // ADD THIS CHECK to prevent multiple simultaneous syncs
+    if (this.isSyncing) {
+      console.log('Sync already in progress, skipping...');
+      return;
+    }
+  
     const operations = this.getPendingOperations();
     if (operations.length === 0) {
       console.log('No pending operations to sync');
       return;
     }
-
+  
     console.log(`Syncing ${operations.length} pending operations`);
-
+    this.isSyncing = true;
+  
     // Sort by timestamp to maintain order
     operations.sort((a, b) => a.timestamp - b.timestamp);
-
+  
     const syncPromises = operations.map(op => this.executePendingOperation(op));
-
+  
     Promise.all(syncPromises).then(() => {
-      console.log('All operations synced successfully');
-      this.savePendingOperations([]);
-      localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
-      
-      // Refresh cache from server
-      this.http.get<Contact[]>(this.apiUrl).subscribe(contacts => {
-        this.saveToCache(contacts);
+        console.log('All operations synced successfully');
+        this.savePendingOperations([]);
+        localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
+        
+        // Refresh cache from server
+        this.http.get<Contact[]>(this.apiUrl).subscribe(contacts => {
+          this.saveToCache(contacts);
+        });
+      })
+      .catch(error => {
+        console.error('Error syncing operations:', error);
+      })
+      .finally(() => {
+        this.isSyncing = false;
       });
-    }).catch(error => {
-      console.error('Error syncing operations:', error);
-    });
   }
 
   private executePendingOperation(operation: PendingOperation): Promise<any> {

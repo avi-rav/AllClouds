@@ -44,14 +44,7 @@ export class DetailComponent {
   }
 
   ngOnInit() {
-    // Test if assets are accessible
-  fetch('assets/images/banner.png')
-  .then(response => {
-    console.log('✅ Banner accessible:', response.ok);
-  })
-  .catch(error => {
-    console.error('❌ Banner NOT accessible:', error);
-  });
+
     this.updateOnlineStatus();
     window.addEventListener('online', () => this.updateOnlineStatus());
     window.addEventListener('offline', () => this.updateOnlineStatus());
@@ -114,26 +107,27 @@ export class DetailComponent {
     }
 
     const offlineMessage = this.isOnline ? '' : ' (will sync when online)';
-
-    if (this.formData.has('image')) {
-      this.uploadImg();
-    }
+    
     if (mode === 'create') {
       this.contactService.createContact(this.contact).subscribe({
         next: (data) => {
           console.log('Contact created:', data);
-          this.contact = data;
-
-          // Upload image after contact creation if there's one
+          this.contact.id = data.id;
+          if (this.formData.has('image')) {
+            this.uploadImg(true);
+          }
           this.notification.show('Contact created successfully!' + offlineMessage, 'success', 3000);
-          this.backToView();
+          this.router.navigate(['/contacts']); // This is the requirments!
         },
         error: (err) => {
           console.error('Error creating contact', err);
           this.notification.show('Error creating contact', 'error', 3000);
         }
       });
-    } else if (mode === 'edit') {      
+    } else if (mode === 'edit') {   
+      if (this.formData.has('image')) {
+        this.uploadImg();
+      }   
       this.contactService.updateContact(this.contact.id, this.contact).subscribe({
         next: (data) => {
           console.log('Contact updated:', data);
@@ -188,18 +182,20 @@ export class DetailComponent {
     reader.readAsDataURL(file);
   }
 
-  uploadImg() {
+  uploadImg(isNew:boolean = false) {
     if (!this.formData.has('image')) {
       return;
     }
 
     const offlineMessage = this.isOnline ? '' : ' (will sync when online)';
-
+    
     this.contactService.uploadImage(this.contact.id, this.formData).subscribe({
       next: (response: any) => {
         console.log('Image uploaded successfully:', response);
         this.notification.show('Image uploaded successfully!' + offlineMessage, 'success',3000);
         this.contact.image = response.path;
+        if(isNew)
+          this.contactService.updateContact(this.contact.id, this.contact).subscribe();
         this.formData = new FormData();
       },
       error: (err) => {

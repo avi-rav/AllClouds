@@ -18,11 +18,21 @@ export class ListComponent implements OnInit {
   filteredContacts: Contact[] = [];
   groupedList: { key: string, contacts: Contact[] }[] = [];
   filteredGroupedList: { key: string, contacts: Contact[] }[] = [];
-
-  constructor(private contactService: ContactService, private notification: NotificationService) {}
+  isOnline: boolean = true;
+  syncStatus: { hasPending: boolean; count: number; lastSync: Date | null } = { hasPending: false, count: 0, lastSync: null };
+  constructor(private contactService: ContactService, private notification: NotificationService) {
+    this.isOnline = this.contactService.isAppOnline();
+  }
 
   ngOnInit() {
     this.loadContacts();
+    window.addEventListener('online', () => this.handleOnline());
+    window.addEventListener('offline', () => this.handleOffline());
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('online', () => this.handleOnline());
+    window.removeEventListener('offline', () => this.handleOffline());
   }
 
   toggleMenu() {
@@ -112,6 +122,29 @@ export class ListComponent implements OnInit {
     const { groupedArray } = this.buildGroupedFromArray(filtered);
   
     this.filteredGroupedList = groupedArray;
+  }
+
+  handleOnline() {
+    this.isOnline = true;
+    this.notification.show('Back online! Syncing...', 'success', 2000);
+    this.contactService.syncPendingOperations();
+    setTimeout(() => {
+      this.loadContacts();
+      this.syncStatus = this.contactService.getSyncStatus();
+    }, 1500);
+  }
+  
+  handleOffline() {
+    this.isOnline = false;
+    this.notification.show('You are offline. Changes will sync when reconnected.', 'error', 3000);
+    this.syncStatus = this.contactService.getSyncStatus();
+  }
+  
+  manualSync() {
+    if (this.isOnline) {
+      this.contactService.syncPendingOperations();
+      setTimeout(() => this.loadContacts(), 1000);
+    }
   }
   
 }
