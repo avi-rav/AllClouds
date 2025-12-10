@@ -130,14 +130,18 @@ export class ListComponent implements OnInit {
     this.contactService.syncPendingOperations();
     setTimeout(() => {
       this.loadContacts();
-      this.syncStatus = this.contactService.getSyncStatus();
+      this.contactService.getSyncStatus().subscribe(status => {
+        this.syncStatus = status;
+      });
     }, 2500);
   }
   
   handleOffline() {
     this.isOnline = false;
     this.notification.show('You are offline. Changes will sync when reconnected.', 'error', 3000);
-    this.syncStatus = this.contactService.getSyncStatus();
+    this.contactService.getSyncStatus().subscribe(status => {
+      this.syncStatus = status;
+    });
   }
   
   manualSync() {

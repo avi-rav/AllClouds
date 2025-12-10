@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NotificationsComponent } from './shared/notifications/notifications.component';
 import { SyncStatusComponent } from './contacts/sync-status/sync-status.component';
+import { IndexedDBService } from './services/indexeddb.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { SyncStatusComponent } from './contacts/sync-status/sync-status.componen
     }),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [IndexedDBService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

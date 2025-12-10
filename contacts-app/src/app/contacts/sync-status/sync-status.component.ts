@@ -40,7 +40,9 @@ export class SyncStatusComponent implements OnInit, OnDestroy {
 
   updateStatus() {
     this.isOnline = this.contactService.isAppOnline();
-    this.syncStatus = this.contactService.getSyncStatus();
+    this.contactService.getSyncStatus().subscribe(status => {
+      this.syncStatus = status;
+    });
   }
 
   syncNow() {

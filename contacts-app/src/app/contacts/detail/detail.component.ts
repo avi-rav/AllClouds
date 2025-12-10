@@ -88,15 +88,19 @@ export class DetailComponent {
 
   updateOnlineStatus() {
     this.isOnline = this.contactService.isAppOnline();
-    this.syncStatus = this.contactService.getSyncStatus();
     
-    if (this.isOnline && this.syncStatus.hasPending) {
-      this.notification.show(
-        `Syncing ${this.syncStatus.count} pending changes...`,
-        'info',
-        3000
-      );
-    }
+    // Update sync status
+    this.contactService.getSyncStatus().subscribe(status => {
+      this.syncStatus = status;
+      
+      if (this.isOnline && this.syncStatus.hasPending) {
+        this.notification.show(
+          `Syncing ${this.syncStatus.count} pending changes...`,
+          'info',
+          3000
+        );
+      }
+    });
   }
 
   save(mode: string) {
@@ -224,10 +228,14 @@ export class DetailComponent {
   }
 
   imgPath() {
-    if (this.previewImage) 
+    if (this.previewImage) {
       return this.previewImage;
-    else {
+    } else {
       if (this.contact && this.contact.image) {
+        // Check if it's a blob URL (from IndexedDB)
+        if (this.contact.image.startsWith('blob:')) {
+          return this.contact.image;
+        }
         // Check if it's a base64 image (offline uploaded)
         if (this.contact.image.startsWith('data:')) {
           return this.contact.image;
