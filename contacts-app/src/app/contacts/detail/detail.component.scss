@@ -1,176 +1,177 @@
 .contact-card {
-    margin: 20px auto;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
-    font-family: Arial, sans-serif;
-    
-    .banner {
-      position: relative;
-      .title {
-        position: absolute;
-        top: 15px;
-        left: 0;
-        color: #fff;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-        margin: 0 auto;
-        width: 100%;
-        text-align: center;
-
-        h2 {
-          font-size: 20px;
-          font-weight: 700;
-        }
-        
-        .buttons {
-          position: absolute;
-          top: 0;
-          width: 97%;
-          display: flex;
-          justify-content: space-between;
-          
-          button {
-            background: rgba(255, 255, 255, 0.4);
-            border: none;
-            color: #fff;
-            padding: 5px 10px;
-            margin-left: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background 0.3s;
+  margin: 20px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  font-family: Arial, sans-serif;
   
-            &:hover {
-              background: rgba(255, 255, 255, 0.6);
-            }
-          }
+  .banner {
+    position: relative;
+    min-height: 100px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
-        }
-      }
-      img {
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-      }
-    }
-    
-  
-    .profile {
-      display: flex;
-      justify-content: center;
+    .title {
+      position: absolute;
+      top: 15px;
+      left: 0;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
       margin: 0 auto;
-      margin-top: -50px;
-      position: relative;
-      width: 108px;
-      height: 108px;
-  
-      .avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 4px solid #fff;
-        object-fit: cover;
-      }
+      width: 100%;
+      text-align: center;
 
-      .upload-input {
+      h2 {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      
+      .buttons {
         position: absolute;
         top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;   
-      }
-
-      .cam-icon{
-        position: absolute;
-        left: 40px;
-        top: 40px;
-        color: #fff;
-        font-size: 30px;
-      }
-    }
-  
-    .info {
-      text-align: center;
-      padding: 15px;
-      margin: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      height: calc(100vh - 300px);
-  
-      h2 {
-        margin: 10px 0 5px 0;
-        font-size: 1.4rem;
-        font-weight: 600;
-      }
-  
-      .company {
-        color: #777;
-        font-size: 0.9em;
-        margin-bottom: 15px;
-      }
-
-      input {
-        flex: 1; 
-        padding: 8px;
-        font-size: 1rem;
-        box-sizing: border-box;
-      }
-    }
-  
-    .contact-details {
-      text-align: left;
-      padding-left: 10px;
-      font-size: 1rem;
-  
-      .detail-item {
+        width: 97%;
         display: flex;
-        align-items: center;
-        margin: 15px 0;
-        font-size: 1em;
-        position: relative;
+        justify-content: space-between;
+        
+        button {
+          background: rgba(255, 255, 255, 0.4);
+          border: none;
+          color: #fff;
+          padding: 5px 10px;
+          margin-left: 5px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 0.9em;
+          transition: background 0.3s;
 
-        .material-icons {
-          margin-right: 20px;
-          color: #e8b67d;
+          &:hover {
+            background: rgba(255, 255, 255, 0.6);
+          }
         }
 
-        .label {
-          width: 100px;
-          font-weight: bold;
-          color: #555;
-          text-transform: uppercase;
-        }
       }
     }
-
-    .invalid {
-      border: 1px solid #e74c3c;
-      background-color: #fdecea;
-    }
-    
-    .error {
-      color: #e74c3c;
-      font-size: 12px;
-      margin-top: 4px;
-      position: absolute;
-      bottom: -15px;
-      left: 45px;
-    }
-
-    .save-btn{
-      width: 85vw;
-      margin: 5px auto;
-      background-color: #2196f3;
-      color: #fff;
-      &:hover {
-        background-color: #1976d2; 
-      }
-    }
-
-    .name-wrapper{
-      position: relative;
+    img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
     }
   }
   
+
+  .profile {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: -50px;
+    position: relative;
+    width: 108px;
+    height: 108px;
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+    }
+
+    .upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;   
+    }
+
+    .cam-icon{
+      position: absolute;
+      left: 40px;
+      top: 40px;
+      color: #fff;
+      font-size: 30px;
+    }
+  }
+
+  .info {
+    text-align: center;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: calc(100vh - 300px);
+    overflow: auto;
+    h2 {
+      margin: 10px 0 5px 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .company {
+      color: #777;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
+
+    input {
+      flex: 1; 
+      padding: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+  }
+
+  .contact-details {
+    text-align: left;
+    font-size: 1rem;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      font-size: 1em;
+      position: relative;
+
+      .material-icons {
+        margin-right: 20px;
+        color: #e8b67d;
+      }
+
+      .label {
+        width: 100px;
+        font-weight: bold;
+        color: #555;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .invalid {
+    border: 1px solid #e74c3c;
+    background-color: #fdecea;
+  }
+  
+  .error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+    position: absolute;
+    bottom: -15px;
+    left: 45px;
+  }
+
+  .save-btn{
+    width: 85vw;
+    margin: 5px auto;
+    background-color: #2196f3;
+    color: #fff;
+    &:hover {
+      background-color: #1976d2; 
+    }
+  }
+
+  .name-wrapper{
+    position: relative;
+  }
+}
