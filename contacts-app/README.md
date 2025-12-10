@@ -1,4 +1,4 @@
-# Contact Manager (Angular + Node.js) — With Offline Application
+# Contact Manager (Angular + Node.js) — With Offline Application using IndexedDB
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.1.
 
@@ -15,7 +15,7 @@ This project is a full **offline‑first Contact Management App** built with **A
 ## Features
 
 ### ✅ **1. Offline‑first Architecture**
-- Uses **Local storage** in the browser to store contacts when offline.
+- Uses **IndexedDB ** in the browser to store contacts when offline.
 - Queue system for storing CREATE/UPDATE actions offline.
 - Automatic sync when the device reconnects to the Internet.
 - Smooth user experience regardless of connectivity.
@@ -27,7 +27,7 @@ This project is a full **offline‑first Contact Management App** built with **A
 
 ### ✅ **3. Image Upload (Online + Offline)**
 - When online → image is uploaded to server → stored on backend.
-- When offline → image stored in Local storage as Base64 → synced later.
+- When offline → image stored in IndexedDB  as Base64 → synced later.
 - Preview image shown instantly.
 
 ### ✅ **4. Mobile‑First UI**
@@ -51,6 +51,7 @@ project/
  │     │    ├── services/
  │     │    │     ├── contact.service.ts
  │     │    │     ├── notifications.service.ts
+ │     │    │     ├── IndexedDB.service.ts
  │     │    ├── pages/
  │     │    │     ├── list/
  │     │    │     └── detail/
@@ -70,7 +71,7 @@ project/
 When the user saves a contact:
 
 - **If online** → send to backend → SQLite → update local IndexedDB.
-- **If offline** → save in Local storage + queue the action.
+- **If offline** → save in IndexedDB  + queue the action.
 
 ### **🔹 2. Queue System**
 Each offline action is stored inside:
@@ -159,7 +160,7 @@ ng serve
 ```
 User Action → Save Contact →
   IF Online → API → SQLite → Update local IndexedDB
-  IF Offline → Local storage → Add to Sync Queue → Wait
+  IF Offline → IndexedDB  → Add to Sync Queue → Wait
 
 Browser Goes Online → SyncService →
     Upload queued contacts
