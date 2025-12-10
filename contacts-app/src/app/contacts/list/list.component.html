@@ -2,22 +2,29 @@
   <div class="contacts-header">
 
   </div>
+  <div>
     <h2>Contacts List</h2>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input
+              type="search"
+              class="search-input"
+              [(ngModel)]="searchTerm"
+              (input)="filterContacts()"
+              placeholder="Search..."/>   
+    </div>
+  </div>
     <div class="actions">
-      <button class="icon-btn" (click)="searchOpen = !searchOpen">
+      <!-- <button class="icon-btn" (click)="searchOpen = !searchOpen">
         <span class="material-icons">search</span>
-      </button>
+      </button> -->
       <button (click)="addRandom()"><span class="material-icons">auto_awesome</span></button>
       <button routerLink="/contacts/new"><span class="material-icons">person_add</span></button>
-      <div class="search-container" [class.open]="searchOpen">    
+      <!-- <div class="search-container" [class.open]="searchOpen">    
         <div class="search-box" *ngIf="searchOpen">
-          <input
-            type="search"
-            [(ngModel)]="searchTerm"
-            (input)="filterContacts()"
-            placeholder="Search..."/>   
+          
         </div>    
-      </div>
+      </div> -->
     </div>
   </header>
   <div class="list-wrapper">

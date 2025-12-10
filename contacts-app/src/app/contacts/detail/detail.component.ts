@@ -23,12 +23,14 @@ export class DetailComponent {
   };
 
   touched = {
+    name: false,
     email: false,
     phone: false,
     cell: false
   };
   
   valid = {
+    name: true,
     email: true,
     phone: true,
     cell: true
@@ -98,11 +100,11 @@ export class DetailComponent {
   }
 
   save(mode: string) {
-    this.touched.email = this.touched.phone = this.touched.cell = true;
+    this.touched.name = this.touched.email = this.touched.phone = this.touched.cell = true;
     this.validateFields();
 
-    if (!this.valid.email || !this.valid.phone || !this.valid.cell) {
-      this.notification.show("Please enter valid values", "error", 3000);
+    if (!this.valid.name || !this.valid.email || !this.valid.phone || !this.valid.cell) {
+      this.notification.show("Please fill in all required fields correctly", "error", 3000);
       return;
     }
 
@@ -241,9 +243,18 @@ export class DetailComponent {
   }
 
   validateFields() {
+    // Validate name (required)
+    this.valid.name = !!(this.contact.name && this.contact.name.trim().length > 0);
+    
+    // Validate email (required and format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.valid.email = !this.contact.email || emailRegex.test(this.contact.email);
-    const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,4}$/;    this.valid.phone = !this.contact.phone || phoneRegex.test(this.contact.phone);
+    this.valid.email = !!(this.contact.email && emailRegex.test(this.contact.email));
+    
+    // Validate phone (required and format)
+    const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,4}$/;
+    this.valid.phone = !!(this.contact.phone && phoneRegex.test(this.contact.phone));
+    
+    // Validate cell (optional but must be valid format if provided)
     this.valid.cell = !this.contact.cell || phoneRegex.test(this.contact.cell);
   }
 

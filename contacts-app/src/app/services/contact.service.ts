@@ -17,7 +17,7 @@ export interface Contact {
 
 interface PendingOperation {
   id: string;
-  type: 'create' | 'update' | 'delete' | 'upload';
+  type: 'create' | 'create_new' | 'update' | 'delete' | 'upload';
   contact?: Contact;
   contactId?: number;
   formData?: any;
@@ -126,7 +126,7 @@ export class ContactService {
     // Add to pending operations
     this.addPendingOperation({
       id: `create_${contact.id}`,
-      type: 'create',
+      type: 'create_new',
       contact: contact,
       timestamp: Date.now()
     });
@@ -319,7 +319,6 @@ export class ContactService {
       return;
     }
   
-    // ADD THIS CHECK to prevent multiple simultaneous syncs
     if (this.isSyncing) {
       console.log('Sync already in progress, skipping...');
       return;
@@ -337,16 +336,23 @@ export class ContactService {
     // Sort by timestamp to maintain order
     operations.sort((a, b) => a.timestamp - b.timestamp);
   
-    const syncPromises = operations.map(op => this.executePendingOperation(op));
-  
-    Promise.all(syncPromises).then(() => {
+    // Use the new method that handles ID mapping
+    this.syncAndMapIds(operations)
+      .then(() => {
         console.log('All operations synced successfully');
         this.savePendingOperations([]);
         localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
         
-        // Refresh cache from server
-        this.http.get<Contact[]>(this.apiUrl).subscribe(contacts => {
-          this.saveToCache(contacts);
+        // Refresh cache from server ONLY ONCE after all operations complete
+        console.log('Refreshing cache from server...');
+        this.http.get<Contact[]>(this.apiUrl).subscribe({
+          next: (contacts) => {
+            this.saveToCache(contacts);
+            console.log('Cache refreshed with', contacts.length, 'contacts');
+          },
+          error: (err) => {
+            console.error('Failed to refresh cache:', err);
+          }
         });
       })
       .catch(error => {
@@ -357,32 +363,317 @@ export class ContactService {
       });
   }
 
-  private executePendingOperation(operation: PendingOperation): Promise<any> {
-    console.log('Executing pending operation:', operation.type);
+  // syncPendingOperations(): void {
+  //   if (!this.isOnline) {
+  //     console.log('Cannot sync - offline');
+  //     return;
+  //   }
+  
+  //   // ADD THIS CHECK to prevent multiple simultaneous syncs
+  //   if (this.isSyncing) {
+  //     console.log('Sync already in progress, skipping...');
+  //     return;
+  //   }
+  
+  //   const operations = this.getPendingOperations();
+  //   if (operations.length === 0) {
+  //     console.log('No pending operations to sync');
+  //     return;
+  //   }
+  
+  //   console.log(`Syncing ${operations.length} pending operations`);
+  //   this.isSyncing = true;
+  
+  //   // Sort by timestamp to maintain order
+  //   operations.sort((a, b) => a.timestamp - b.timestamp);
+  
+  //   const syncPromises = operations.map(op => this.executePendingOperation(op));
+  
+  //   Promise.all(syncPromises).then(() => {
+  //       console.log('All operations synced successfully');
+  //       this.savePendingOperations([]);
+  //       localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
+        
+  //       // Refresh cache from server
+  //       this.http.get<Contact[]>(this.apiUrl).subscribe(contacts => {
+  //         this.saveToCache(contacts);
+  //       });
+  //     })
+  //     .catch(error => {
+  //       console.error('Error syncing operations:', error);
+  //     })
+  //     .finally(() => {
+  //       this.isSyncing = false;
+  //     });
+  // }
 
-    switch (operation.type) {
-      case 'create':
-        return this.http.post(this.apiUrl, operation.contact).toPromise();
+  // syncPendingOperations(): void {
+  //   if (!this.isOnline) {
+  //     console.log('Cannot sync - offline');
+  //     return;
+  //   }
+  
+  //   if (this.isSyncing) {
+  //     console.log('Sync already in progress, skipping...');
+  //     return;
+  //   }
+  
+  //   const operations = this.getPendingOperations();
+  //   if (operations.length === 0) {
+  //     console.log('No pending operations to sync');
+  //     return;
+  //   }
+  
+  //   console.log(`Syncing ${operations.length} pending operations`);
+  //   this.isSyncing = true;
+  
+  //   // Sort by timestamp to maintain order
+  //   operations.sort((a, b) => a.timestamp - b.timestamp);
+  
+  //   // Use the new method that handles ID mapping
+  //   this.syncAndMapIds(operations)
+  //     .then(() => {
+  //       console.log('All operations synced successfully');
+  //       this.savePendingOperations([]);
+  //       localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
+        
+  //       // Refresh cache from server
+  //       this.http.get<Contact[]>(this.apiUrl).subscribe(contacts => {
+  //         this.saveToCache(contacts);
+  //         console.log('Cache refreshed after sync');
+  //       });
+  //     })
+  //     .catch(error => {
+  //       console.error('Error syncing operations:', error);
+  //     })
+  //     .finally(() => {
+  //       this.isSyncing = false;
+  //     });
+  // }
+
+  // private executePendingOperation(operation: PendingOperation): Promise<any> {
+  //   console.log('Executing pending operation:', operation.type);
+
+  //   switch (operation.type) {
+  //     case 'create_new':
+  //       if (operation.contact && operation.contact.id) {
+  //         operation.contact.id = -1;
+  //       }
+  //       return this.http.post(this.apiUrl, operation.contact).toPromise();
+
+  //     case 'create':
+  //       return this.http.post(this.apiUrl, operation.contact).toPromise();
       
-      case 'update':
-        return this.http.put(`${this.apiUrl}/${operation.contactId}`, operation.contact).toPromise();
+  //     case 'update':
+  //       return this.http.put(`${this.apiUrl}/${operation.contactId}`, operation.contact).toPromise();
       
-      case 'delete':
-        return this.http.delete(`${this.apiUrl}/${operation.contactId}`).toPromise();
+  //     case 'delete':
+  //       return this.http.delete(`${this.apiUrl}/${operation.contactId}`).toPromise();
       
-      case 'upload':
-        // Convert base64 back to FormData
-        return fetch(operation.formData as string)
-          .then(res => res.blob())
-          .then(blob => {
-            const formData = new FormData();
-            formData.append('image', blob, 'image.jpg');
-            return this.http.post(`${this.apiUrl}/${operation.contactId}/upload-image`, formData).toPromise();
-          });
+  //     case 'upload':
+  //       // Convert base64 back to FormData
+  //       return fetch(operation.formData as string)
+  //         .then(res => res.blob())
+  //         .then(blob => {
+  //           const formData = new FormData();
+  //           formData.append('image', blob, 'image.jpg');
+  //           return this.http.post(`${this.apiUrl}/${operation.contactId}/upload-image`, formData).toPromise();
+  //         });
       
-      default:
-        return Promise.resolve();
+  //     default:
+  //       return Promise.resolve();
+  //   }
+  // }
+
+  // private async syncAndMapIds(operations: PendingOperation[]): Promise<void> {
+  //   const idMapping: { [tempId: number]: number } = {}; // Maps temp IDs to real IDs
+  
+  //   for (const op of operations) {
+  //     try {
+  //       if (op.type === 'create_new' && op.contact) {
+  //         // Create contact and get real ID
+  //         const tempId = op.contact.id;
+  //         const contactToCreate = { ...op.contact };
+  //         contactToCreate.id = -1; // Remove temp ID before sending
+          
+  //         const result: any = await this.http.post(this.apiUrl, contactToCreate).toPromise();
+  //         const realId = result.id;
+          
+  //         console.log(`Mapped temp ID ${tempId} -> real ID ${realId}`);
+  //         idMapping[tempId] = realId;
+          
+  //         // Update cache with real ID
+  //         const cached = this.getFromCache();
+  //         const updated = cached.map(c => c.id === tempId ? { ...c, id: realId } : c);
+  //         this.saveToCache(updated);
+          
+  //       } else if (op.type === 'upload' && op.contactId) {
+  //         // Check if this contactId needs mapping
+  //         const realId = idMapping[op.contactId] || op.contactId;
+          
+  //         // Upload image with correct ID
+  //         const blob = await fetch(op.formData as string).then(res => res.blob());
+  //         const formData = new FormData();
+  //         formData.append('image', blob, 'image.jpg');
+  //         await this.http.post(`${this.apiUrl}/${realId}/upload-image`, formData).toPromise();
+          
+  //       } else if (op.type === 'update' && op.contactId) {
+  //         // Check if this contactId needs mapping
+  //         const realId = idMapping[op.contactId] || op.contactId;
+  //         await this.http.put(`${this.apiUrl}/${realId}`, op.contact).toPromise();
+          
+  //       } else if (op.type === 'delete' && op.contactId) {
+  //         const realId = idMapping[op.contactId] || op.contactId;
+  //         await this.http.delete(`${this.apiUrl}/${realId}`).toPromise();
+  //       }
+        
+  //       console.log('Executed:', op.type);
+  //     } catch (error) {
+  //       console.error('Failed to execute:', op.type, error);
+  //       throw error;
+  //     }
+  //   }
+  // }
+
+  // private async syncAndMapIds(operations: PendingOperation[]): Promise<void> {
+  //   const idMapping: { [tempId: number]: number } = {}; // Maps temp IDs to real IDs
+  
+  //   for (const op of operations) {
+  //     try {
+  //       if (op.type === 'create_new' && op.contact) {
+  //         // Create contact and get real ID
+  //         const tempId = op.contact.id;
+  //         const contactToCreate = { ...op.contact };
+  //         contactToCreate.id = -1;
+          
+  //         const result: any = await this.http.post(this.apiUrl, contactToCreate).toPromise();
+  //         const realId = result.id;
+          
+  //         console.log(`Created contact: temp ID ${tempId} -> real ID ${realId}`);
+  //         idMapping[tempId] = realId;
+          
+  //         // Update cache with real ID
+  //         const cached = this.getFromCache();
+  //         const updated = cached.map(c => c.id === tempId ? { ...c, id: realId } : c);
+  //         this.saveToCache(updated);
+          
+  //         // IMPORTANT: Update all subsequent pending operations that reference this temp ID
+  //         this.updatePendingOperationsIds(operations, tempId, realId);
+          
+  //       } else if (op.type === 'upload' && op.contactId) {
+  //         // Use mapped ID if available, otherwise use original
+  //         const realId = idMapping[op.contactId] || op.contactId;
+          
+  //         console.log(`Uploading image for contact ${realId} (was ${op.contactId})`);
+          
+  //         // Upload image with correct ID
+  //         const blob = await fetch(op.formData as string).then(res => res.blob());
+  //         const formData = new FormData();
+  //         formData.append('image', blob, 'image.jpg');
+  //         const response: any = await this.http.post(`${this.apiUrl}/${realId}/upload-image`, formData).toPromise();
+          
+  //         // Update cache with image path
+  //         const cached = this.getFromCache();
+  //         const updated = cached.map(c => c.id === realId ? { ...c, image: response.path } : c);
+  //         this.saveToCache(updated);
+          
+  //       } else if (op.type === 'update' && op.contactId) {
+  //         // Use mapped ID if available
+  //         const realId = idMapping[op.contactId] || op.contactId;
+          
+  //         console.log(`Updating contact ${realId} (was ${op.contactId})`);
+          
+  //         await this.http.put(`${this.apiUrl}/${realId}`, op.contact).toPromise();
+          
+  //       } else if (op.type === 'delete' && op.contactId) {
+  //         const realId = idMapping[op.contactId] || op.contactId;
+          
+  //         console.log(`Deleting contact ${realId} (was ${op.contactId})`);
+          
+  //         await this.http.delete(`${this.apiUrl}/${realId}`).toPromise();
+  //       }
+        
+  //     } catch (error) {
+  //       console.error('Failed to execute:', op.type, error);
+  //       throw error;
+  //     }
+  //   }
+  // }
+
+  private async syncAndMapIds(operations: PendingOperation[]): Promise<void> {
+    const idMapping: { [tempId: number]: number } = {}; // Maps temp IDs to real IDs
+  
+    for (const op of operations) {
+      try {
+        if (op.type === 'create_new' && op.contact) {
+          // Create contact and get real ID
+          const tempId = op.contact.id;
+          const contactToCreate = { ...op.contact };
+          contactToCreate.id = -1; // Remove temp ID before sending
+          
+          const result: any = await this.http.post(this.apiUrl, contactToCreate).toPromise();
+          const realId = result.id;
+          
+          console.log(`✅ Created contact: temp ID ${tempId} -> real ID ${realId}`);
+          idMapping[tempId] = realId;
+          
+          // REMOVED: Don't update cache here, will refresh once at the end
+          
+          // Update all subsequent pending operations that reference this temp ID
+          this.updatePendingOperationsIds(operations, tempId, realId);
+          
+        } else if (op.type === 'upload' && op.contactId) {
+          // Use mapped ID if available, otherwise use original
+          const realId = idMapping[op.contactId] || op.contactId;
+          
+          console.log(`📤 Uploading image for contact ${realId}`);
+          
+          // Upload image with correct ID
+          const blob = await fetch(op.formData as string).then(res => res.blob());
+          const formData = new FormData();
+          formData.append('image', blob, 'image.jpg');
+          await this.http.post(`${this.apiUrl}/${realId}/upload-image`, formData).toPromise();
+          
+          // REMOVED: Don't update cache here
+          
+        } else if (op.type === 'update' && op.contactId) {
+          // Use mapped ID if available
+          const realId = idMapping[op.contactId] || op.contactId;
+          
+          console.log(`✏️ Updating contact ${realId}`);
+          
+          await this.http.put(`${this.apiUrl}/${realId}`, op.contact).toPromise();
+          
+        } else if (op.type === 'delete' && op.contactId) {
+          const realId = idMapping[op.contactId] || op.contactId;
+          
+          console.log(`🗑️ Deleting contact ${realId}`);
+          
+          await this.http.delete(`${this.apiUrl}/${realId}`).toPromise();
+        }
+        
+      } catch (error) {
+        console.error('❌ Failed to execute:', op.type, error);
+        throw error;
+      }
     }
+  }
+  
+  // NEW METHOD: Update all pending operations that reference an old temp ID
+  private updatePendingOperationsIds(operations: PendingOperation[], oldId: number, newId: number): void {
+    operations.forEach(op => {
+      // Update contactId references
+      if (op.contactId === oldId) {
+        console.log(`🔄 Updating operation ${op.type}: contactId ${oldId} -> ${newId}`);
+        op.contactId = newId;
+      }
+      
+      // Update contact.id if it's in the contact object
+      if (op.contact && op.contact.id === oldId) {
+        console.log(`🔄 Updating operation ${op.type}: contact.id ${oldId} -> ${newId}`);
+        op.contact.id = newId;
+      }
+    });
   }
 
   // Get sync status

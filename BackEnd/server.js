@@ -23,7 +23,8 @@ const upload = multer({
 });
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(cors());
 app.use('/uploads', express.static(uploadDir));
 
@@ -75,17 +76,32 @@ app.get('/contacts/:id', (req, res) => {
   res.json(contact);
 });
 
+// // Add new contact
+// app.post('/contacts', upload.single('image'), (req, res) => {
+//   const { name, fullAddress, email, phone, cell, registrationDate, age } = req.body;
+//   const image = req.file ? `/uploads/${req.file.filename}` : null;
+//   req.body.id = null;
+//   const stmt = db.prepare(`
+//     INSERT INTO contacts (name, fullAddress, email, phone, cell, registrationDate, age, image)
+//     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+//   `);
+//   const info = stmt.run(name, fullAddress, email, phone, cell, registrationDate, age, image);
+//   res.json({ id: info.lastInsertRowid });
+// });
+
 // Add new contact
 app.post('/contacts', upload.single('image'), (req, res) => {
   const { name, fullAddress, email, phone, cell, registrationDate, age } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-
+  const image = req.file ? `/uploads/${req.file.filename}` : req.body.image || null; // ADD: Accept image from body too
+  req.body.id = null;
   const stmt = db.prepare(`
     INSERT INTO contacts (name, fullAddress, email, phone, cell, registrationDate, age, image)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const info = stmt.run(name, fullAddress, email, phone, cell, registrationDate, age, image);
-  res.json({ id: info.lastInsertRowid });
+  
+  const newContact = db.prepare('SELECT * FROM contacts WHERE id = ?').get(info.lastInsertRowid);
+  res.json(newContact);
 });
 
 // Update contact

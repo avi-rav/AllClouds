@@ -131,7 +131,7 @@ export class ListComponent implements OnInit {
     setTimeout(() => {
       this.loadContacts();
       this.syncStatus = this.contactService.getSyncStatus();
-    }, 1500);
+    }, 2500);
   }
   
   handleOffline() {
